@@ -1,25 +1,33 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { Header } from './components/header';
+import { Pokemon } from './components/pokemon';
+import { usePokemonData } from './hooks/use-pokemon-data';
+import { useScroll } from './hooks/use-scroll';
 
 function App() {
+  const [{ pokemons, status }, loadMorePokemon] = usePokemonData();
+  const marginBottom = useScroll();
+
+  React.useEffect(() => {
+    if (marginBottom < 20) {
+      loadMorePokemon();
+    }
+  }, [loadMorePokemon, marginBottom]);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <Header />
+      <div className="container">
+        <div id="pokemon-container">
+          {pokemons.map(pokemon => (
+            <Pokemon {...pokemon} key={pokemon.id} />
+          ))}
+        </div>
+        {status === 'loading' && (
+          <p className="loading-text nes-balloon from-left is-shown">Loading...</p>
+        )}
+      </div>
+    </>
   );
 }
 
