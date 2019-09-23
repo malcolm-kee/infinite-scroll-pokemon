@@ -8,7 +8,7 @@ export const PokemonDataMixin = {
       pokemons: []
     };
   },
-  loadMorePokemonsData: function() {
+  fetchMorePokemonData: function() {
     this.setState({
       pokemonLoadingStatus: 'loading'
     });
@@ -20,11 +20,11 @@ export const PokemonDataMixin = {
     );
   },
   componentDidMount: function() {
-    this.loadMorePokemonsData();
+    this.fetchMorePokemonData();
   },
   componentDidUpdate: function(_, prevState) {
     if (prevState.pokemonCurrentPage !== this.state.pokemonCurrentPage) {
-      this.loadMorePokemonsData();
+      this.fetchMorePokemonData();
     }
   },
   loadMorePokemons: function() {
