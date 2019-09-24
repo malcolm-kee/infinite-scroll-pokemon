@@ -7,27 +7,38 @@ import { Text } from './components/text';
 import { Toolbar } from './components/toolbar';
 import { getPokemons } from './service';
 
+/**
+ * Render props solve the limitation of mixin, but it has its own drawback too:
+ * - not intuitive. The code is hard to read.
+ * - nested component.
+ *
+ * It is time to fix the problem within the framework, instead of developer
+ * to use complex pattern to overcome the framework limitation.
+ *
+ * "React Hooks"
+ */
+
 export const App = () => {
-  const [pokemonLoadingStatus, setPokemonLoadingStatus] = React.useState('loading');
+  const [status, setStatus] = React.useState('loading');
   const [pokemons, setPokemons] = React.useState([]);
-  const [pokemonCurrentPage, setPokemonCurrentPage] = React.useState(1);
+  const [currentPage, setCurrentPage] = React.useState(1);
 
   React.useEffect(() => {
-    setPokemonLoadingStatus('loading');
+    setStatus('loading');
 
     getPokemons({
-      page: pokemonCurrentPage
+      page: currentPage
     })
       .then(newPokemons => {
         setPokemons(oldPokemons => oldPokemons.concat(newPokemons));
-        setPokemonLoadingStatus('idle');
+        setStatus('idle');
       })
-      .catch(() => setPokemonLoadingStatus('error'));
-  }, [pokemonCurrentPage]);
+      .catch(() => setStatus('error'));
+  }, [currentPage]);
 
   const loadMorePokemons = () => {
-    if (pokemonLoadingStatus === 'idle') {
-      setPokemonCurrentPage(page => page + 1);
+    if (status === 'idle') {
+      setCurrentPage(page => page + 1);
     }
   };
 
@@ -40,8 +51,8 @@ export const App = () => {
             <Pokemon {...pokemon} key={pokemon.id} />
           ))}
         </div>
-        {pokemonLoadingStatus === 'loading' && <Balloon>Loading...</Balloon>}
-        {pokemonLoadingStatus === 'error' && <Text variant="error">Something goes wrong!</Text>}
+        {status === 'loading' && <Balloon>Loading...</Balloon>}
+        {status === 'error' && <Text variant="error">Something goes wrong!</Text>}
         <Toolbar>
           <Button onClick={loadMorePokemons}>Load More</Button>
         </Toolbar>

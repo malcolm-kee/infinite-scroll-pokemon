@@ -1,4 +1,5 @@
-import createClass from 'create-react-class';
+import createClass from 'create-react-class'; /* legacy method in React 15, 
+                                              deprecated in React 16 */
 import React from 'react';
 import { Balloon } from './components/balloon';
 import { Button } from './components/button';
@@ -8,52 +9,66 @@ import { Text } from './components/text';
 import { Toolbar } from './components/toolbar';
 import { getPokemons } from './service';
 
+/**
+ * Mixin is the original approach to extract stateful logic
+ * in React. It is intuitive and easy to understand, same mechanism
+ * is ported to Vue.
+ *
+ * Let's understand our current application and then extract the logic
+ * out into a mixin.
+ */
+
 export const App = createClass({
+  // initialize state
   getInitialState: function() {
     return {
-      pokemonLoadingStatus: 'loading',
-      pokemonCurrentPage: 1,
-      pokemons: []
+      status: 'loading', // track data is loading/idle/error
+      currentPage: 1, // pagination parameter
+      pokemons: [] // pokemon data
     };
   },
+  // custom method to make API call and append it to `pokemons` state
   fetchMorePokemons: function() {
     this.setState({
-      pokemonLoadingStatus: 'loading'
+      status: 'loading'
     });
 
-    getPokemons({ page: this.state.pokemonCurrentPage })
+    getPokemons({ page: this.state.currentPage })
       .then(pokemons =>
         this.setState(prevState => ({
           pokemons: prevState.pokemons.concat(pokemons),
-          pokemonLoadingStatus: 'idle'
+          status: 'idle'
         }))
       )
       .catch(error =>
         this.setState(
           {
-            pokemonLoadingStatus: 'error'
+            status: 'error'
           },
           () => console.error(error)
         )
       );
   },
-  loadMorePokemons: function() {
-    if (this.state.pokemonLoadingStatus === 'idle') {
-      this.setState(prevState => ({
-        pokemonCurrentPage: prevState.pokemonCurrentPage + 1
-      }));
-    }
-  },
+  // get the initial list of pokemons when mounted
   componentDidMount: function() {
     this.fetchMorePokemons();
   },
-  componentDidUpdate: function(_, prevState) {
-    if (this.state.pokemonCurrentPage !== prevState.pokemonCurrentPage) {
+  // custom method to increment `currentPage` state when `status` is not `loading`/`error`
+  loadMorePokemons: function() {
+    if (this.state.status === 'idle') {
+      this.setState(prevState => ({
+        currentPage: prevState.currentPage + 1
+      }));
+    }
+  },
+  // fetch more pokemon data whenever `currentPage` is changed
+  componentDidUpdate: function(prevProps, prevState) {
+    if (this.state.currentPage !== prevState.currentPage) {
       this.fetchMorePokemons();
     }
   },
   render: function() {
-    const { pokemons, pokemonLoadingStatus } = this.state;
+    const { pokemons, status } = this.state;
 
     return (
       <>
@@ -64,8 +79,8 @@ export const App = createClass({
               <Pokemon {...pokemon} key={pokemon.id} />
             ))}
           </div>
-          {pokemonLoadingStatus === 'loading' && <Balloon>Loading...</Balloon>}
-          {pokemonLoadingStatus === 'error' && <Text variant="error">Something goes wrong!</Text>}
+          {status === 'loading' && <Balloon>Loading...</Balloon>}
+          {status === 'error' && <Text variant="error">Something goes wrong!</Text>}
           <Toolbar>
             <Button onClick={this.loadMorePokemons}>Load More</Button>
           </Toolbar>

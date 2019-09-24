@@ -7,11 +7,13 @@
  * contents are loaded.
  */
 export const ScrollMixin = {
+  // initialize `scrollMarginBottom` state
   getInitialState: function() {
     return {
       scrollMarginBottom: 0
     };
   },
+  // custom method to update `scrollMarginBottom` based on scroll position
   _handleScroll: function() {
     this.setState({
       scrollMarginBottom:
@@ -19,9 +21,11 @@ export const ScrollMixin = {
         (window.innerHeight + document.documentElement.scrollTop)
     });
   },
+  // start listenining to window `scroll` event
   componentDidMount: function() {
     window.addEventListener('scroll', this._handleScroll);
   },
+  // stop listening to window `scroll` event
   componentWillUnmount: function() {
     window.removeEventListener('scroll', this._handleScroll);
   }
