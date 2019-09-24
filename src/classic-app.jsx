@@ -50,7 +50,7 @@ export const App = createClass({
         <Header />
         <div className="container">
           <div class="nes-container toolbar">
-            <button className="nes-btn is-primary" type="button">
+            <button onClick={this.loadMorePokemons} className="nes-btn is-primary" type="button">
               Load More
             </button>
           </div>
