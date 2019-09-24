@@ -13,6 +13,10 @@ export const App = createClass({
     };
   },
   fetchMorePokemons: function() {
+    this.setState({
+      pokemonLoadingStatus: 'loading'
+    });
+
     getPokemons({ page: this.state.pokemonCurrentPage })
       .then(pokemons =>
         this.setState(prevState => ({
@@ -49,22 +53,22 @@ export const App = createClass({
       <>
         <Header />
         <div className="container">
-          <div class="nes-container toolbar">
-            <button onClick={this.loadMorePokemons} className="nes-btn is-primary" type="button">
-              Load More
-            </button>
-          </div>
           <div id="pokemon-container">
             {this.state.pokemons.map(pokemon => (
               <Pokemon {...pokemon} key={pokemon.id} />
             ))}
           </div>
           {this.state.pokemonLoadingStatus === 'loading' && (
-            <p className="loading-text nes-balloon from-left is-shown">Loading...</p>
+            <p className="nes-balloon from-left is-shown">Loading...</p>
           )}
           {this.state.pokemonLoadingStatus === 'error' && (
             <p className="nes-text is-error">Something goes wrong!</p>
           )}
+          <div className="nes-container toolbar">
+            <button onClick={this.loadMorePokemons} className="nes-btn is-primary" type="button">
+              Load More
+            </button>
+          </div>
         </div>
       </>
     );

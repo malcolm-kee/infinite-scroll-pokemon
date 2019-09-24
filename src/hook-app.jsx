@@ -9,6 +9,8 @@ export const App = () => {
   const [pokemonCurrentPage, setPokemonCurrentPage] = React.useState(1);
 
   React.useEffect(() => {
+    setPokemonLoadingStatus('loading');
+
     getPokemons({
       page: pokemonCurrentPage
     })
@@ -29,11 +31,6 @@ export const App = () => {
     <>
       <Header />
       <div className="container">
-        <div class="nes-container toolbar">
-          <button onClick={loadMorePokemons} className="nes-btn is-primary" type="button">
-            Load More
-          </button>
-        </div>
         <div id="pokemon-container">
           {pokemons.map(pokemon => (
             <Pokemon {...pokemon} key={pokemon.id} />
@@ -45,6 +42,11 @@ export const App = () => {
         {pokemonLoadingStatus === 'error' && (
           <p className="nes-text is-error">Something goes wrong!</p>
         )}
+        <div className="nes-container toolbar">
+          <button onClick={loadMorePokemons} className="nes-btn is-primary" type="button">
+            Load More
+          </button>
+        </div>
       </div>
     </>
   );
