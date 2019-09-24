@@ -4,5 +4,6 @@ import 'nes.css/css/nes.css';
 import './index.css';
 import { App } from './classic-app';
 // import { App } from './es6-app';
+// import { App } from "./hook-app";
 
 ReactDOM.render(<App />, document.getElementById('root'));
