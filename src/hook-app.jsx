@@ -1,6 +1,10 @@
 import React from 'react';
+import { Balloon } from './components/balloon';
+import { Button } from './components/button';
 import { Header } from './components/header';
 import { Pokemon } from './components/pokemon';
+import { Text } from './components/text';
+import { Toolbar } from './components/toolbar';
 import { getPokemons } from './service';
 
 export const App = () => {
@@ -36,17 +40,11 @@ export const App = () => {
             <Pokemon {...pokemon} key={pokemon.id} />
           ))}
         </div>
-        {pokemonLoadingStatus === 'loading' && (
-          <p className="loading-text nes-balloon from-left is-shown">Loading...</p>
-        )}
-        {pokemonLoadingStatus === 'error' && (
-          <p className="nes-text is-error">Something goes wrong!</p>
-        )}
-        <div className="nes-container toolbar">
-          <button onClick={loadMorePokemons} className="nes-btn is-primary" type="button">
-            Load More
-          </button>
-        </div>
+        {pokemonLoadingStatus === 'loading' && <Balloon>Loading...</Balloon>}
+        {pokemonLoadingStatus === 'error' && <Text variant="error">Something goes wrong!</Text>}
+        <Toolbar>
+          <Button onClick={loadMorePokemons}>Load More</Button>
+        </Toolbar>
       </div>
     </>
   );

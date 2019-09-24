@@ -1,7 +1,11 @@
 import React from 'react';
+import { Balloon } from './components/balloon';
 import { Header } from './components/header';
 import { Pokemon } from './components/pokemon';
 import { getPokemons } from './service';
+import { Button } from './components/button';
+import { Text } from './components/text';
+import { Toolbar } from './components/toolbar';
 
 export class App extends React.Component {
   state = {
@@ -51,26 +55,22 @@ export class App extends React.Component {
   }
 
   render() {
+    const { pokemons, pokemonLoadingStatus } = this.state;
+
     return (
       <>
         <Header />
         <div className="container">
           <div id="pokemon-container">
-            {this.state.pokemons.map(pokemon => (
+            {pokemons.map(pokemon => (
               <Pokemon {...pokemon} key={pokemon.id} />
             ))}
           </div>
-          {this.state.pokemonLoadingStatus === 'loading' && (
-            <p className="loading-text nes-balloon from-left is-shown">Loading...</p>
-          )}
-          {this.state.pokemonLoadingStatus === 'error' && (
-            <p className="nes-text is-error">Something goes wrong!</p>
-          )}
-          <div className="nes-container toolbar">
-            <button onClick={this.loadMorePokemons} className="nes-btn is-primary" type="button">
-              Load More
-            </button>
-          </div>
+          {pokemonLoadingStatus === 'loading' && <Balloon>Loading...</Balloon>}
+          {pokemonLoadingStatus === 'error' && <Text variant="error">Something goes wrong!</Text>}
+          <Toolbar>
+            <Button onClick={this.loadMorePokemons}>Load More</Button>
+          </Toolbar>
         </div>
       </>
     );
