@@ -1,14 +1,14 @@
+import React from 'react';
 import { getPokemons } from '../service';
 
-export const PokemonDataMixin = {
-  getInitialState: function() {
-    return {
-      pokemonLoadingStatus: 'idle',
-      pokemonCurrentPage: 1,
-      pokemons: []
-    };
-  },
-  fetchMorePokemonData: function() {
+export class PokemonData extends React.Component {
+  state = {
+    pokemonLoadingStatus: 'idle',
+    pokemonCurrentPage: 1,
+    pokemons: []
+  };
+
+  loadMorePokemonsData = () => {
     this.setState({
       pokemonLoadingStatus: 'loading'
     });
@@ -18,20 +18,31 @@ export const PokemonDataMixin = {
         pokemonLoadingStatus: 'idle'
       }))
     );
-  },
-  componentDidMount: function() {
-    this.fetchMorePokemonData();
-  },
-  componentDidUpdate: function(_, prevState) {
+  };
+
+  componentDidMount() {
+    this.loadMorePokemonsData();
+  }
+
+  componentDidUpdate(_, prevState) {
     if (prevState.pokemonCurrentPage !== this.state.pokemonCurrentPage) {
-      this.fetchMorePokemonData();
+      this.loadMorePokemonsData();
     }
-  },
-  loadMorePokemons: function() {
+  }
+
+  loadMorePokemons = () => {
     if (this.state.pokemonLoadingStatus === 'idle') {
       this.setState(prevState => ({
         pokemonCurrentPage: prevState.pokemonCurrentPage + 1
       }));
     }
+  };
+
+  render() {
+    return this.props.render({
+      status: this.state.pokemonLoadingStatus,
+      pokemons: this.state.pokemons,
+      loadMorePokemons: this.loadMorePokemons
+    });
   }
-};
+}
