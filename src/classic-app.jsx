@@ -1,5 +1,4 @@
-import createClass from 'create-react-class'; /* legacy method in React 15, 
-                                              deprecated in React 16 */
+import createClass from 'create-react-class';
 import React from 'react';
 import { Balloon } from './components/balloon';
 import { Button } from './components/button';
@@ -18,6 +17,9 @@ import { getPokemons } from './service';
  * out into a mixin.
  */
 
+/**
+ * `createClass` is legacy method in React 15, deprecated in React 16.
+ */
 export const App = createClass({
   // initialize state
   getInitialState: function() {
